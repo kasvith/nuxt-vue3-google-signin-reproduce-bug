@@ -21,6 +21,6 @@ const { isReady, login } = useTokenClient({
 
 <template>
   <button :disabled="!isReady" @click="() => login()">
-    Login with Google Custom button a
+    Login with Google Custom button
   </button>
 </template>

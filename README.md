@@ -1,75 +1,26 @@
-# Nuxt 3 Minimal Starter
+# Bug reproduction
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This is a bug reproduction for the [issue](https://github.com/wavezync/nuxt-vue3-google-signin/issues/14).
 
-## Setup
+# Weird behavior
 
-Make sure to install the dependencies:
+Obvious, the `nuxt-vue3-google-signin` gives an error in dev mode.
 
-```bash
-# npm
-npm install
+But if you modify
 
-# pnpm
-pnpm install
+`node_modules/nuxt-vue3-google-signin/dist/runtime/plugin.mjs` with following content in your project:
 
-# yarn
-yarn install
-
-# bun
-bun install
+```js
+import { defineNuxtPlugin, useRuntimeConfig } from "#app";
+export default defineNuxtPlugin(async (nuxtApp) => {
+  console.log("nuxt-vue3-google-signin plugin"); // adding this line make it works
+  const { googleSignIn } = useRuntimeConfig().public;
+  if (googleSignIn) {
+    const plugin = await import("vue3-google-signin");
+    nuxtApp.vueApp.use(plugin.default, { clientId: googleSignIn.clientId });
+  }
+});
 ```
 
-## Development Server
+it starts to working normally.
 
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
